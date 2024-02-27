@@ -31,5 +31,4 @@ def _interpolate(
         return _interpolate(dotlist[1:], data[key], full_key)
     elif isinstance(data, list):
         return _interpolate(dotlist[1:], data[int(key)], full_key)
-    # Should never happen
-    raise NotImplementedError
+    raise ValueError("Provided data cannot be interpolated")

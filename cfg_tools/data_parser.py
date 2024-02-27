@@ -41,7 +41,7 @@ class ParsingContext:
 
 def parse_str(
     query: str,
-    data: Mapping[str, Any] | Sequence[Any],
+    data: Any,
     context: ParsingContext | None = None,
 ) -> Any:
     if not len(query):
@@ -158,33 +158,29 @@ def parse_str(
             )
 
 
-def parse_list(
-    data: Sequence[Any], base_data: Mapping[str, Any] | Sequence[Any]
-) -> Sequence[Any]:
+def parse_list(queries: Sequence[Any], data: Any) -> list[Any]:
     new_data: list[Any] = []
-    for val in data:
+    for val in queries:
         if isinstance(val, str) and "{" in val and "}" in val:
-            new_data.append(parse_str(val, base_data))
+            new_data.append(parse_str(val, data))
         elif isinstance(val, dict):
-            new_data.append(parse_dict(val, base_data))
+            new_data.append(parse_dict(val, data))
         elif isinstance(val, list):
-            new_data.append(parse_list(val, base_data))
+            new_data.append(parse_list(val, data))
         else:
             new_data.append(val)
     return new_data
 
 
-def parse_dict(
-    data: Mapping[str, Any], base_data: Mapping[str, Any] | Sequence[Any]
-) -> dict[str, Any]:
+def parse_dict(queries: Mapping[str, Any], data: Any) -> dict[str, Any]:
     new_data: dict[str, Any] = {}
-    for key, val in data.items():
+    for key, val in queries.items():
         if isinstance(val, str) and "{" in val and "}" in val:
-            new_data[key] = parse_str(val, base_data)
+            new_data[key] = parse_str(val, data)
         elif isinstance(val, dict):
-            new_data[key] = parse_dict(val, base_data)
+            new_data[key] = parse_dict(val, data)
         elif isinstance(val, list):
-            new_data[key] = parse_list(val, base_data)
+            new_data[key] = parse_list(val, data)
         else:
             new_data[key] = val
     return new_data
