@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "cfg-tools"
-version = "0.1.0"
+version = "0.1.1"
 description = "Config tools"
 authors = ["bdvllrs <bdvllrs@gmail.com>"]
 license = "MIT"
