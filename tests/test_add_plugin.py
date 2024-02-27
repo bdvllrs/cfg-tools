@@ -1,3 +1,5 @@
+from typing import Any
+
 from cfg_tools import parse_str, register_plugin
 
 
@@ -7,7 +9,7 @@ def plugin_test(key: str, _) -> str:
 
 
 def test_register_plugin():
-    data = {}
+    data: dict[str, Any] = {}
     query = "{test:foo}"
     parsed_query = parse_str(query, data)
     assert parsed_query == "test_foo"

@@ -310,6 +310,17 @@ pluggy = ">=0.12,<2.0"
 testing = ["argcomplete", "attrs (>=19.2.0)", "hypothesis (>=3.56)", "mock", "nose", "pygments (>=2.7.2)", "requests", "setuptools", "xmlschema"]
 
 [[package]]
+name = "types-setuptools"
+version = "69.1.0.20240223"
+description = "Typing stubs for setuptools"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "types-setuptools-69.1.0.20240223.tar.gz", hash = "sha256:8a886a1fd06b668782dfbdaded4fd8a4e8c9f3d8d4c02acdd1240df098f50bf7"},
+    {file = "types_setuptools-69.1.0.20240223-py3-none-any.whl", hash = "sha256:30a0d9903a81a424bd0f979534552a016a4543760aaffd499b9a2fe85bae0bfd"},
+]
+
+[[package]]
 name = "typing-extensions"
 version = "4.10.0"
 description = "Backported and Experimental Type Hints for Python 3.8+"
@@ -323,4 +334,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "3de8190413f66c76adb680854867e18c45221d4d22cc9e21661dc86777e5a634"
+content-hash = "d1f0ae494e089d8a01b1133ae9e574f8ffe51462ed1de3ec682a1466a223def6"
