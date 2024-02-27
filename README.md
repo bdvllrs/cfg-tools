@@ -96,3 +96,32 @@ class Config(ParsedModel):
     name: str
     other: SubConfig
 ```
+
+# Load config from multiple files and argv
+```python
+from cfg_tools import load_config_files
+
+
+merged_config, cli_config = load_config_files(
+    "/path/to/config/folder",
+    load_files=["test.yaml"],
+)
+# merged_config is already merged with CLI stuff, but you can access what was
+# passed to argv from cli_config.
+```
+
+Everythin is relative to the "/path/to/config/folder"
+Will first look for `default.yaml`; it will then update with
+all of the infos in the `load_files` (in order), and finish with `local.yaml`.
+
+In `default.yaml`  add all of your default values. In `local.yaml` put information
+that only relates to the current machine (paths, passwords, ...) and don't version it!
+
+You can also set `debug_mode=True`. If so, it will load a `debug.yaml` config at the
+very end.
+
+Finally, information from argv is loaded at the end (so it will have priority!)
+It is loaded with "dot" notation. This means that "a.b.c=2" will correspond to
+```
+{"a": {"b": {"c": 2}}}
+```
