@@ -75,8 +75,10 @@ parsed_query = parse_list(queries, data)
 ```
 
 # Pydantic model
-Use `ParsedModel` instead of pydantic's `BaseModel` for your root configuration object
-to add some parsing abilities.
+Use `ParsedModel` instead of pydantic's `BaseModel` for your root configuration object.
+This will parse all str fields in your config with the whole config as data context.
+For example in the following, `parse_str` will be called on `Config.name` 
+and `SubConfig.sub_name`.
 
 ```python
 from pydantic import BaseModel
@@ -86,7 +88,7 @@ from cfg_tools import ParsedModel
 
 # Still use BaseModel
 class SubConfig(BaseModel):
-    name: str
+    sub_name: str
 
 
 # Use ParsedModel
