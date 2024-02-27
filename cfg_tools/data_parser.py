@@ -79,7 +79,6 @@ def parse_str(
             and context.interpolation_plugin == _default_plugin
             and not context.is_escaped
         ):
-            print(context)
             return parse_str(
                 rest,
                 data,
@@ -91,7 +90,6 @@ def parse_str(
                 ),
             )
         case "}" if context.in_interpolation and not context.is_escaped:
-            print(context.interpolation_plugin)
             interpolated = execute_parser_plugin(
                 context.interpolation_plugin, context.interpolation_key, data
             )
