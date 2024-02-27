@@ -1,0 +1,41 @@
+[tool.poetry]
+name = "cfg-tools"
+version = "0.1.0"
+description = "Config tools"
+authors = ["bdvllrs <bdvllrs@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+packages = [{include = "cfg_tools"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+pydantic = "^2.6.0"
+
+[tool.poetry.group.dev.dependencies]
+flake8 = "^6.0.0"
+mypy = "^1.4.0"
+isort = "^5.13.2"
+
+[tool.poetry.group.test.dependencies]
+pytest = "^7.3.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+
+[tool.isort]
+profile = "black"
+line_length = 88
+py_version = 311
+
+
+[tool.black]
+line-length = 88
+
+
+[tool.mypy]
+ignore_missing_imports = true
+install_types = true
+check_untyped_defs = true
