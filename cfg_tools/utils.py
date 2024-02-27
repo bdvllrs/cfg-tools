@@ -56,7 +56,7 @@ def load_config_files(
     use_cli: bool = True,
     debug_mode: bool = False,
     argv: list[str] | None = None,
-) -> dict[str, Any]:
+) -> tuple[dict[str, Any], dict[str, Any]]:
     config_path = Path(path)
     if not config_path.is_dir():
         raise FileNotFoundError(f"Config path {config_path} does not exist.")
@@ -81,4 +81,4 @@ def load_config_files(
     if use_cli:
         cli_config = parse_args(argv)
         merge_dicts(config_dict, cli_config)
-    return config_dict
+    return config_dict, cli_config
