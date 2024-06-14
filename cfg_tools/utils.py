@@ -52,25 +52,16 @@ def merge_dicts(a: dict[str, Any], b: dict[str, Any]):
 
 def load_config_files(
     path: str | Path,
-    load_files: list[str] | None = None,
+    load_files: list[str],
     use_cli: bool = True,
-    debug_mode: bool = False,
     argv: list[str] | None = None,
 ) -> tuple[dict[str, Any], dict[str, Any]]:
     config_path = Path(path)
     if not config_path.is_dir():
         raise FileNotFoundError(f"Config path {config_path} does not exist.")
 
-    conf_files = ["default.yaml"]
-    if load_files is not None:
-        conf_files.extend(load_files)
-    conf_files.append("local.yaml")
-
-    if debug_mode:
-        conf_files.append("debug.yaml")
-
     config_dict: dict[str, Any] = {}
-    for file in conf_files:
+    for file in load_files:
         path_file = config_path / file
         if not path_file.is_file():
             raise FileNotFoundError(f"Config file {path_file} does not exist.")
