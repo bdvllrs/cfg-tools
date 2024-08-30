@@ -35,6 +35,7 @@ _default_plugin = "interpolate"
 class ParsingContext:
     in_interpolation: bool = False
     is_escaped: bool = False
+    interpolation_prefix: bool = False
     interpolation_key: str = ""
     interpolation_plugin: str = _default_plugin
 
@@ -52,7 +53,7 @@ def parse_str(
 
     letter, rest = query[0], query[1:]
     match letter:
-        case "\\" if not context.is_escaped and not context.in_interpolation:
+        case "\\" if not context.is_escaped:
             return parse_str(
                 rest,
                 data,
@@ -63,7 +64,43 @@ def parse_str(
                     interpolation_plugin=context.interpolation_plugin,
                 ),
             )
-        case "{" if not context.is_escaped:
+        case "\\" if context.is_escaped:
+            return letter + parse_str(
+                rest,
+                data,
+                ParsingContext(
+                    in_interpolation=context.in_interpolation,
+                    is_escaped=False,
+                    interpolation_key=context.interpolation_key,
+                    interpolation_plugin=context.interpolation_plugin,
+                ),
+            )
+
+        case "#" if not context.in_interpolation and not context.is_escaped:
+            return parse_str(
+                rest,
+                data,
+                ParsingContext(
+                    interpolation_prefix=True,
+                    in_interpolation=False,
+                    is_escaped=False,
+                    interpolation_key=context.interpolation_key,
+                    interpolation_plugin=context.interpolation_plugin,
+                ),
+            )
+        case "#" if not context.in_interpolation and context.is_escaped:
+            return letter + parse_str(
+                rest,
+                data,
+                ParsingContext(
+                    in_interpolation=context.in_interpolation,
+                    is_escaped=False,
+                    interpolation_key=context.interpolation_key,
+                    interpolation_plugin=context.interpolation_plugin,
+                ),
+            )
+
+        case "{" if context.interpolation_prefix:
             return parse_str(
                 rest,
                 data,
@@ -75,9 +112,7 @@ def parse_str(
                 ),
             )
         case ":" if (
-            context.in_interpolation
-            and context.interpolation_plugin == _default_plugin
-            and not context.is_escaped
+            context.in_interpolation and context.interpolation_plugin == _default_plugin
         ):
             return parse_str(
                 rest,
@@ -106,29 +141,48 @@ def parse_str(
                 )
 
             return interpolated
-        case x if context.in_interpolation:
+        case "}" if context.in_interpolation and context.is_escaped:
             return parse_str(
                 rest,
                 data,
                 ParsingContext(
                     in_interpolation=True,
                     is_escaped=False,
-                    interpolation_key=context.interpolation_key + x,
+                    interpolation_key=context.interpolation_key + "}",
                     interpolation_plugin=context.interpolation_plugin,
                 ),
             )
-        case "{" | "}" | "\\" if context.is_escaped:
-            return letter + parse_str(
+        case _ if context.interpolation_prefix:
+            return (
+                "#"
+                + letter
+                + parse_str(
+                    rest,
+                    data,
+                    ParsingContext(
+                        in_interpolation=False,
+                        is_escaped=False,
+                        interpolation_key="",
+                        interpolation_plugin=context.interpolation_plugin,
+                    ),
+                )
+            )
+
+        case x if context.in_interpolation:
+            key = context.interpolation_key
+            if context.is_escaped:
+                key += "\\"
+            return parse_str(
                 rest,
                 data,
                 ParsingContext(
-                    in_interpolation=context.in_interpolation,
+                    in_interpolation=True,
                     is_escaped=False,
-                    interpolation_key=context.interpolation_key,
+                    interpolation_key=key + x,
                     interpolation_plugin=context.interpolation_plugin,
                 ),
             )
-        case x if context.is_escaped:
+        case _ if context.is_escaped:
             return (
                 "\\"
                 + letter
@@ -143,7 +197,7 @@ def parse_str(
                     ),
                 )
             )
-        case x:
+        case _:
             return letter + parse_str(
                 rest,
                 data,

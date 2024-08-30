@@ -10,6 +10,6 @@ def plugin_test(key: str, _) -> str:
 
 def test_register_plugin():
     data: dict[str, Any] = {}
-    query = "{test:foo}"
+    query = "#{test:foo}"
     parsed_query = parse_str(query, data)
     assert parsed_query == "test_foo"

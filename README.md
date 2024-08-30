@@ -6,7 +6,7 @@ plugins.
 
 in the query, any field of the form:
 ```python
-query = "foo {pluginName:content}"
+query = "foo #{pluginName:content}"
 ```
 will call the plugin `pluginName` with key "content", and access to the `data` dict.
 When no plugin is given, it defaults to the "interpolate" plugin.
@@ -19,7 +19,7 @@ from cfg_tools import parse_str
 
 
 data = {"a": {"b": ["baz"]}}
-query = "foo bar {interpolate:a.b.0}"
+query = "foo bar #{interpolate:a.b.0}"
 parsed_query = parse_str(query, data)
 # parsed_query = "foo bar baz"
 ```
@@ -30,7 +30,7 @@ from cfg_tools import parse_str
 
 
 data = {"a": {"b": ["baz"]}}
-query = "foo bar {a.b.0}"
+query = "foo bar #{a.b.0}"
 parsed_query = parse_str(query, data)
 # parsed_query = "foo bar baz"
 ```
@@ -41,7 +41,7 @@ from cfg_tools import parse_str
 
 
 data = {}
-query = "foo bar {env:HOME,/home/default}"
+query = "foo bar #{env:HOME,/home/default}"
 parsed_query = parse_str(query, data)
 # parsed_query = "foo bar /home/example"
 ```
@@ -60,7 +60,7 @@ Then, this will work:
 
 ```python
 data = {}
-query = "{test:foo}"
+query = "#{test:foo}"
 parsed_query = parse_str(query, data)
 # parsed_query = "test_foo"
 ```
@@ -69,7 +69,7 @@ parsed_query = parse_str(query, data)
 You can also parse lists and dicts with `parse_dict` and `parse_list`.
 ```python
 data = {"a": "foo", "b": "bar"}
-queries = ["{a}", "{b}"]
+queries = ["#{a}", "#{b}"]
 parsed_query = parse_list(queries, data)
 # parsed_query = ["foo", "bar"]
 ```
