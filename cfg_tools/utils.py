@@ -31,7 +31,7 @@ def parse_args(argv: list[str] | None = None) -> dict[str, Any]:
     return config
 
 
-def merge_dicts(a: dict[str, Any], b: dict[str, Any]):
+def merge_dicts(a: dict[str, Any], b: dict[str, Any] | None):
     """
     Deep merge two dicts. a will be updated with values in b.
     Example:
@@ -40,6 +40,8 @@ def merge_dicts(a: dict[str, Any], b: dict[str, Any]):
         merge_dicts(a, b)
         assert a == {"a": {"b": 2, "c": 3}}
     """
+    if b is None:
+        return
     for k in b.keys():
         if k in a:
             if isinstance(a[k], dict) and isinstance(b[k], dict):
