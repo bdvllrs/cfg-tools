@@ -9,7 +9,6 @@ from rich import print as rprint
 from ruamel.yaml import YAML
 
 
-
 def parse_args(argv: list[str] | None = None) -> dict[str, Any]:
     """
     Parse argument list into a dictionary.
@@ -29,7 +28,7 @@ def parse_args(argv: list[str] | None = None) -> dict[str, Any]:
         value = arg[idx + 1 :]
         c = config
         for key in keys[:-1]:
-            if key not in c.keys():
+            if key not in c:
                 c[key] = {}
             c = c[key]
         c[keys[-1]] = value
@@ -47,7 +46,7 @@ def merge_dicts(a: dict[str, Any], b: dict[str, Any] | None):
     """
     if b is None:
         return
-    for k in b.keys():
+    for k in b:
         if k in a:
             if isinstance(a[k], dict) and isinstance(b[k], dict):
                 merge_dicts(a[k], b[k])
@@ -72,7 +71,7 @@ def load_config_files(
         path_file = config_path / file
         if not path_file.is_file():
             raise FileNotFoundError(f"Config file {path_file} does not exist.")
-        with open(path_file, "r") as f:
+        with open(path_file) as f:
             merge_dicts(config_dict, yaml.safe_load(f))
 
     cli_config: dict[str, Any] = {}

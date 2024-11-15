@@ -18,9 +18,8 @@ def _interpolate(
         raise KeyError(f"{full_key} cannot be interpolated because does not exist.")
 
     key = dotlist[0]
-    if isinstance(data, list):
-        if not dotlist[0].isdigit():
-            raise KeyError(f"{dotlist[0]} should be an int when data is a sequence")
+    if isinstance(data, list) and not dotlist[0].isdigit():
+        raise KeyError(f"{dotlist[0]} should be an int when data is a sequence")
 
     if len(dotlist) == 1 and isinstance(data, Mapping):
         return data[key]
