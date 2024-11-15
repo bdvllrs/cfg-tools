@@ -134,9 +134,13 @@ Model = TypeVar("Model", bound=BaseModel | ParsedModel)
 
 
 def validate_and_fill_missing(
-    config_dict: dict[str, Any], conf_cls: Type[Model], conf_path: Path
+    config_dict: dict[str, Any],
+    conf_cls: Type[Model],
+    conf_path: Path,
+    target_file: str,
 ) -> Model:
     local_yaml = YAML()
+    target_file_path = conf_path / target_file
     for _ in range(2):
         try:
             return conf_cls.model_validate(config_dict)
@@ -147,18 +151,18 @@ def validate_and_fill_missing(
             if should_save:
                 rprint(
                     "Do you want to save the values in "
-                    "`[green]config/local.yaml[/green]`? [Y/n]",
+                    f"`[green]{str(target_file_path.resolve())}[/green]`? [Y/n]",
                     end="",
                 )
                 do_save = input()
                 if do_save.lower() in ["yes", "y", ""]:
                     local_file = {}
-                    if (conf_path / "local.yaml").exists():
-                        with open(conf_path / "local.yaml") as f:
+                    if (target_file_path).exists():
+                        with open(target_file_path) as f:
                             local_file = local_yaml.load(f)
                     for new_val in new_vals:
                         merge_dicts(local_file, new_val)
-                    with open(conf_path / "local.yaml", "w") as f:
+                    with open(target_file_path, "w") as f:
                         local_yaml.dump(local_file, f)
 
             if len(other_errors):
