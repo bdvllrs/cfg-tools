@@ -1,6 +1,6 @@
 import sys
 from pathlib import Path
-from typing import Any, Type, TypeVar
+from typing import Any, TypeVar
 
 import yaml
 from pydantic import BaseModel, ValidationError
@@ -8,7 +8,6 @@ from pydantic_core import InitErrorDetails
 from rich import print as rprint
 from ruamel.yaml import YAML
 
-from cfg_tools.data_parser import ParsedModel
 
 
 def parse_args(argv: list[str] | None = None) -> dict[str, Any]:
@@ -130,12 +129,12 @@ def set_config_dynamically(e: ValidationError, config_dict: dict[str, Any]):
     return other_errors, config_dict, new_vals, ask_should_save
 
 
-Model = TypeVar("Model", bound=BaseModel | ParsedModel)
+Model = TypeVar("Model", bound=BaseModel)
 
 
 def validate_and_fill_missing(
     config_dict: dict[str, Any],
-    conf_cls: Type[Model],
+    conf_cls: type[Model],
     conf_path: Path,
     target_file: str,
 ) -> Model:
